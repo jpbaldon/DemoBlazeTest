@@ -46,6 +46,7 @@ class CartPage extends BasePage {
      * @returns {Promise<Array>} array of cart items with title and price
      */
     async getCartItems() {
+        await this.totalPrice.waitForDisplayed();  //wait for total price to ensure all items are loaded
         const items = [];
         const titles = await this.cartItemTitles;
         const prices = await this.cartItemPrices;

@@ -21,7 +21,7 @@ describe('Demoblaze End-to-End Purchase Tests', () => {
         // Go to cart
         await CartPage.open();
         const cartItems = await CartPage.getCartItems();
-        addStep(`Cart items: ${JSON.stringify(cartItems)}`);  // failing: returning an empty array here
+        addStep(`Cart items: ${JSON.stringify(cartItems)}`);
         expect(cartItems[0].title).to.equal(productName);
         
         // Place order
