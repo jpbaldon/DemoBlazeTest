@@ -3,6 +3,7 @@ import { expect } from 'chai'
 import HomePage from '../pageobjects/home.page.js'
 import ProductPage from '../pageobjects/product.page.js'
 import CartPage from '../pageobjects/cart.page.js'
+import { addStep } from '@wdio/allure-reporter'
 
 describe('Demoblaze Cart Tests', () => {
     
@@ -26,7 +27,7 @@ describe('Demoblaze Cart Tests', () => {
         await HomePage.clickProductByIndex(0);
         await ProductPage.addToCartWithAlert();
         await CartPage.open();
-        
+        await CartPage.getCartItems();
         const itemCount = await CartPage.getCartItemCount();
         expect(itemCount).to.equal(1);
     });

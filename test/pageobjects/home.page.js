@@ -56,6 +56,24 @@ class HomePage extends BasePage {
     }
 
     /**
+     * Waits for all products to load (count stops changing)
+     */
+    async waitForAllProducts() { 
+        let lastCount = 0; 
+        await browser.waitUntil(async () => { 
+            const products = await this.productItems;
+            const currentCount = products.length;
+            const done = currentCount > 0 && currentCount === lastCount;
+            lastCount = currentCount;
+            return done; 
+        }, 
+        { 
+            timeout: 5000,
+            timeoutMsg: 'Products never stabilized'
+        });
+    }
+
+    /**
      * Click on a specific category
      * @param {string} category - category name (Phones, Laptops, Monitors)
      */

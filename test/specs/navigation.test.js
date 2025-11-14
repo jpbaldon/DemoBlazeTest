@@ -29,6 +29,7 @@ describe('Demoblaze Navigation Tests', () => {
     });
 
     it('should display products on home page', async () => {
+        await HomePage.waitForAllProducts();
         const products = await HomePage.productItems;
         expect(products.length).to.be.greaterThan(0);
     });
