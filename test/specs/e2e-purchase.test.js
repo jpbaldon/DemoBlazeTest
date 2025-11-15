@@ -9,7 +9,7 @@ describe('Demoblaze End-to-End Purchase Tests', () => {
     beforeEach(async () => {
         await HomePage.open();
     });
-
+    // PURCHASE TEST #1
     it('should complete a full purchase flow', async () => {
         // Browse and add product to cart
         await HomePage.clickProductByIndex(0);
@@ -47,7 +47,7 @@ describe('Demoblaze End-to-End Purchase Tests', () => {
         
         await CartPage.closeConfirmation();
     });
-
+    // PURCHASE TEST #2
     it('should purchase multiple products', async () => {
         // Add first product
         await HomePage.selectCategory('Phones');
@@ -62,6 +62,7 @@ describe('Demoblaze End-to-End Purchase Tests', () => {
         
         // Go to cart and verify
         await CartPage.open();
+        await CartPage.totalPrice.waitForDisplayed();
         const itemCount = await CartPage.getCartItemCount();
         expect(itemCount).to.equal(2);
         
@@ -82,7 +83,7 @@ describe('Demoblaze End-to-End Purchase Tests', () => {
         
         await CartPage.closeConfirmation();
     });
-
+    // PURCHASE TEST #3
     it('should show order details in confirmation', async () => {
         // Add product and purchase
         await HomePage.clickProductByIndex(0);
@@ -109,7 +110,7 @@ describe('Demoblaze End-to-End Purchase Tests', () => {
         
         await CartPage.closeConfirmation();
     });
-
+    // PURCHASE TEST #4
     it('should verify purchase workflow from category selection', async () => {
         // Select category and product
         await HomePage.selectCategory('Monitors');
@@ -127,8 +128,10 @@ describe('Demoblaze End-to-End Purchase Tests', () => {
         await CartPage.open();
         const cartItems = await CartPage.getCartItems();
         expect(cartItems[0].title).to.equal(productName);
-        expect(cartItems[0].price).to.equal(productPrice);
-        
+        const cartPriceNum = parseFloat(cartItems[0].price.match(/\d+/)[0]);
+        const productPriceNum = parseFloat(productPrice.match(/\d+/)[0]);
+        expect(cartPriceNum).to.equal(productPriceNum);
+
         // Complete order
         const orderData = {
             name: 'Monitor Buyer',

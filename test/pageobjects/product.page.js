@@ -73,7 +73,6 @@ class ProductPage extends BasePage {
      */
     async goToHome() {
         await this.homeLink.click();
-        await browser.pause(500);
     }
 
     /**

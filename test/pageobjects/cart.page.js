@@ -12,7 +12,7 @@ class CartPage extends BasePage {
     get cartItems() { return $$('#tbodyid tr'); }
     get cartItemTitles() { return $$('#tbodyid tr td:nth-child(2)'); }
     get cartItemPrices() { return $$('#tbodyid tr td:nth-child(3)'); }
-    get deleteButtons() { return $$('#tbodyid tr td a'); }
+    get deleteButtons() { return $$('#tbodyid tr td:nth-child(4) a'); }
     get totalPrice() { return $('#totalp'); }
     get placeOrderButton() { return $('.btn-success'); }
     get continueShoppingButton() { return $('button=Continue Shopping'); }
@@ -87,6 +87,7 @@ class CartPage extends BasePage {
      * @returns {Promise<boolean>} true if cart is empty
      */
     async isCartEmpty() {
+        await browser.refresh();  // make sure the DOM has been updated (in case we just deleted an item)
         const count = await this.getCartItemCount();
         return count === 0;
     }
@@ -96,9 +97,16 @@ class CartPage extends BasePage {
      * @param {number} index - index of item to delete (0-based)
      */
     async deleteItemByIndex(index) {
+        await this.cartItems[index].waitForDisplayed();
+        const items = await this.cartItems;
         const deleteButtons = await this.deleteButtons;
+        await deleteButtons[index].waitForClickable();
         await deleteButtons[index].click();
-        await browser.pause(1000); // Wait for item to be removed
+        // wait for the row to be gone
+        await browser.waitUntil(async () => {
+            const newItems = await this.cartItems;
+            return newItems.length < items.length;
+        }, { timeout: 3000, timeoutMsg: 'Item not removed from cart' });
     }
 
     /**
@@ -113,7 +121,7 @@ class CartPage extends BasePage {
             if (itemTitle === title) {
                 const deleteButton = await items[i].$('a');
                 await deleteButton.click();
-                await browser.pause(1000);
+                await browser.pause(500);
                 break;
             }
         }
@@ -124,7 +132,7 @@ class CartPage extends BasePage {
      */
     async clearCart() {
         let itemCount = await this.getCartItemCount();
-        while (itemCount > 0) {
+        while (itemCount) {
             await this.deleteItemByIndex(0);
             itemCount = await this.getCartItemCount();
         }

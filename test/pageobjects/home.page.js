@@ -81,7 +81,7 @@ class HomePage extends BasePage {
         const categoryElement = await $(`=${category}`);
         await categoryElement.waitForClickable();
         await categoryElement.click();
-        await browser.pause(1000); // Wait for products to load
+        await browser.pause(500); // Wait for products to load
     }
 
     /**
@@ -133,7 +133,6 @@ class HomePage extends BasePage {
         await this.loginUsername.setValue(username);
         await this.loginPassword.setValue(password);
         await this.loginButton.click();
-        await browser.pause(1000); // Wait for login to complete
     }
 
     /**
@@ -147,7 +146,6 @@ class HomePage extends BasePage {
         await this.signupUsername.setValue(username);
         await this.signupPassword.setValue(password);
         await this.signupButton.click();
-        await browser.pause(1000); // Wait for signup to complete
     }
 
     /**
@@ -177,7 +175,6 @@ class HomePage extends BasePage {
      */
     async logout() {
         await this.navLogout.click();
-        await browser.pause(500);
     }
 
     /**
@@ -185,7 +182,6 @@ class HomePage extends BasePage {
      */
     async goToCart() {
         await this.navCart.click();
-        await browser.pause(500);
     }
 
     /**
